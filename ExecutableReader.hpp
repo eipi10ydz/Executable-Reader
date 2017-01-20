@@ -11,10 +11,10 @@
 using std::cout;
 using std::endl;
 
-class ExcutableReader
+class ExecutableReader
 {
 public:
-    ExcutableReader(const std::string &file_name) : file_name(file_name) { }
+    ExecutableReader(const std::string &file_name) : file_name(file_name) { }
 	enum FILE_TYPE {Error, ELF32, ELF64, PE32, PE64};
 	static FILE_TYPE type_check(const std::string&);
 protected:
@@ -25,15 +25,15 @@ protected:
 #ifdef linux
 #include <elf.h>
 
-class ELFReader : public ExcutableReader
+class ELFReader : public ExecutableReader
 {
 public:
-    ELFReader(const std::string &file_name) : ExcutableReader(file_name) { }
+    ELFReader(const std::string &file_name) : ExecutableReader(file_name) { }
     static FILE_TYPE type_check(const std::string&);
     virtual void read_file() = 0;
 };
 
-ExcutableReader::FILE_TYPE ELFReader::type_check(const std::string &file_name)
+ExecutableReader::FILE_TYPE ELFReader::type_check(const std::string &file_name)
 {
     std::FILE *fp = nullptr;
     fp = std::fopen(file_name.c_str(), "rb");
@@ -225,7 +225,7 @@ void ELF64Reader::read_file()
 #if (defined _WIN64) || (defined _WIN32)
 #include <Windows.h>
 
-class PEReader : public ExcutableReader
+class PEReader : public ExecutableReader
 {
 	friend std::ostream& operator<<(std::ostream&, const PEReader&);
 public:
@@ -291,7 +291,7 @@ std::ostream& operator<<(std::ostream &out, const PEReader &pv)
     return out;
 }
 
-PEReader::PEReader(PEReader &&pv) : ExcutableReader(std::move(file_name))
+PEReader::PEReader(PEReader &&pv) : ExecutableReader(std::move(file_name))
 {
 	if (dos_stub)
 		delete []dos_stub;
@@ -314,7 +314,7 @@ PEReader& PEReader::operator=(PEReader &&pv)
 	return *this;
 }
 
-ExcutableReader::FILE_TYPE PEReader::type_check(const std::string &file_name)
+ExecutableReader::FILE_TYPE PEReader::type_check(const std::string &file_name)
 {
 	IMAGE_DOS_HEADER idh;
 	std::FILE *fp = nullptr;
@@ -411,7 +411,7 @@ void PE64Reader::read_file()
 
 #endif
 
-enum ExcutableReader::FILE_TYPE ExcutableReader::type_check(const std::string &file_name)
+enum ExecutableReader::FILE_TYPE ExecutableReader::type_check(const std::string &file_name)
 {
     std::FILE *fp = nullptr;
     fp = fopen(file_name.c_str(), "rb");

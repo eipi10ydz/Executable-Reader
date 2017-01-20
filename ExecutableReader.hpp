@@ -1,5 +1,5 @@
-#ifndef _EXCUTABLE_READER_
-#define _EXCUTABLE_READER_
+#ifndef _EXECUTABLE_READER_
+#define _EXECUTABLE_READER_
 
 #include <string>
 #include <cstring>
@@ -229,7 +229,7 @@ class PEReader : public ExecutableReader
 {
 	friend std::ostream& operator<<(std::ostream&, const PEReader&);
 public:
-	PEReader(const std::string &file_name) : ExcutableReader(file_name) {}
+	PEReader(const std::string &file_name) : ExecutableReader(file_name) {}
 	PEReader(const PEReader&) = delete;
 	PEReader(PEReader&&);
 	PEReader& operator=(const PEReader&) = delete;
